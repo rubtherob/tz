@@ -1,0 +1,24 @@
+version: '3.1'
+
+services:
+  db:
+    image: postgres:13.1
+    privileged: true
+    ports:
+    - 5432:5432
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: 1
+      POSTGRES_DB: db
+
+  backend:
+    build: ./TzApi
+    privileged: true
+    ports:
+      - 8080:8080
+    command: bash -c "
+      python3 manage.py migrate
+      && python3 manage.py runserver 0.0.0.0:8080"
+    depends_on:
+      - db
+
